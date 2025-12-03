@@ -1,8 +1,6 @@
-"""
-Client schemas (Pydantic models).
+"""Pydantic schemas for Client entity."""
 
-Schemas for request/response validation and serialization.
-"""
+from __future__ import annotations
 
 from datetime import datetime
 from typing import Optional
@@ -11,36 +9,34 @@ from pydantic import BaseModel, EmailStr, Field
 
 
 class ClientBase(BaseModel):
-    """Base client schema with common fields."""
+    """Shared client fields."""
+
     name: str = Field(..., min_length=1, max_length=255)
-    email: EmailStr
-    phone: Optional[str] = Field(None, max_length=20)
-    company_name: Optional[str] = Field(None, max_length=255)
-    address: Optional[str] = Field(None, max_length=500)
-    is_active: bool = True
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = Field(None, max_length=50)
 
 
 class ClientCreate(ClientBase):
-    """Schema for creating a new client."""
-    tenant_id: int
+    """Payload for creating a client."""
+
+    tenant_id: int = Field(..., ge=1)
 
 
 class ClientUpdate(BaseModel):
-    """Schema for updating client information."""
+    """Payload for updating a client."""
+
     name: Optional[str] = Field(None, min_length=1, max_length=255)
     email: Optional[EmailStr] = None
-    phone: Optional[str] = Field(None, max_length=20)
-    company_name: Optional[str] = Field(None, max_length=255)
-    address: Optional[str] = Field(None, max_length=500)
-    is_active: Optional[bool] = None
+    phone: Optional[str] = Field(None, max_length=50)
 
 
-class ClientResponse(ClientBase):
-    """Schema for client response."""
+class ClientRead(ClientBase):
+    """Representation of a client returned by the API."""
+
     id: int
     tenant_id: int
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True

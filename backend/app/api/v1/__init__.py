@@ -10,12 +10,12 @@
 
 from fastapi import APIRouter
 
-from .routers import auth, tenants, users, clients
+from . import auth, clients, tenants, users
 
 router = APIRouter()
 
 # Подключаем все роутеры
 router.include_router(auth.router, prefix="/auth", tags=["auth"])
-router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])
 router.include_router(users.router, prefix="/users", tags=["users"])
+router.include_router(tenants.router, prefix="/tenants", tags=["tenants"])
 router.include_router(clients.router, prefix="/clients", tags=["clients"])

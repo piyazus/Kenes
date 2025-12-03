@@ -11,7 +11,7 @@ from app.schemas.user import (
     UserBase,
     UserCreate,
     UserUpdate,
-    UserResponse,
+    UserRead,
     UserLogin,
     UserRegister,
 )
@@ -19,14 +19,17 @@ from app.schemas.tenant import (
     TenantBase,
     TenantCreate,
     TenantUpdate,
-    TenantResponse,
-    TenantDetailResponse,
+    TenantRead,
 )
 from app.schemas.client import (
     ClientBase,
     ClientCreate,
     ClientUpdate,
-    ClientResponse,
+    ClientRead,
+)
+from app.schemas.auth import (
+    RefreshTokenRequest,
+    TokenResponse,
 )
 
 __all__ = [
@@ -34,19 +37,21 @@ __all__ = [
     "UserBase",
     "UserCreate",
     "UserUpdate",
-    "UserResponse",
+    "UserRead",
     "UserLogin",
     "UserRegister",
     # Tenant schemas
     "TenantBase",
     "TenantCreate",
     "TenantUpdate",
-    "TenantResponse",
-    "TenantDetailResponse",
+    "TenantRead",
     # Client schemas
     "ClientBase",
     "ClientCreate",
     "ClientUpdate",
-    "ClientResponse",
+    "ClientRead",
+    # Auth schemas
+    "RefreshTokenRequest",
+    "TokenResponse",
 ]
 

@@ -1,40 +1,80 @@
-from fastapi import FastAPI
+"""
+Main FastAPI application.
 
-from app.api.v1 import router as v1_router
-from app.api.v1.health import router as health_router
+Creates and configures the FastAPI application with all routers and middleware.
+"""
+
+import time
+import uuid
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+
+from app.api.v1 import auth, clients, health, tenants, users
 from app.core.config import settings
-from app.db.session import engine
-from app.db.base import Base
+
+
+class RequestIDMiddleware(BaseHTTPMiddleware):
+    """Middleware для добавления request_id к каждому запросу."""
+
+    async def dispatch(self, request: Request, call_next):
+        request_id = str(uuid.uuid4())
+        request.state.request_id = request_id
+        
+        start_time = time.time()
+        response = await call_next(request)
+        process_time = time.time() - start_time
+        
+        response.headers["X-Request-ID"] = request_id
+        response.headers["X-Process-Time"] = str(process_time)
+        
+        return response
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Lifespan context manager для startup и shutdown событий.
+    
+    Вся работа с созданием/миграциями БД выполняется через Alembic.
+    """
+    yield
 
 
 def create_application() -> FastAPI:
+    """
+    Создает и настраивает FastAPI приложение.
+    
+    Подключает все роутеры, middleware и настраивает CORS.
+    """
     app = FastAPI(
         title=settings.project_name,
         version=settings.version,
+        lifespan=lifespan,
     )
 
-    # Монтируем health check отдельно
-    app.include_router(health_router, prefix=settings.api_v1_prefix, tags=["health"])
+    # Middleware
+    app.add_middleware(RequestIDMiddleware)
     
-    # Монтируем все остальные роутеры v1
-    app.include_router(v1_router, prefix=settings.api_v1_prefix)
+    # CORS middleware (для разработки, на проде настроить правильно)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # В продакшене указать конкретные домены
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Подключаем роутеры
+    app.include_router(health.router, prefix=settings.api_v1_prefix)
+    app.include_router(auth.router, prefix=settings.api_v1_prefix)
+    app.include_router(users.router, prefix=settings.api_v1_prefix)
+    app.include_router(tenants.router, prefix=settings.api_v1_prefix)
+    app.include_router(clients.router, prefix=settings.api_v1_prefix)
 
     return app
 
 
 app = create_application()
-
-
-@app.on_event("startup")
-def on_startup():
-    """
-    При старте создаем таблицы, если их еще нет.
-    На проде это будет отключено, так как миграции будет выполнять Alembic.
-    
-    Обработка ошибок подключения к БД для локальной разработки.
-    """
-    try:
-        Base.metadata.create_all(bind=engine)
-    except Exception as e:
-        print(f"⚠️  Warning: Could not connect to database on startup: {e}")
-        print("⚠️  Application will continue, but database operations will fail until DB is available")
