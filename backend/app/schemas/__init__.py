@@ -21,15 +21,34 @@ from app.schemas.tenant import (
     TenantUpdate,
     TenantRead,
 )
-from app.schemas.client import (
-    ClientBase,
-    ClientCreate,
-    ClientUpdate,
-    ClientRead,
-)
+from app.schemas.client import ClientBase, ClientCreate, ClientUpdate, ClientRead
 from app.schemas.auth import (
     RefreshTokenRequest,
     TokenResponse,
+)
+from app.schemas.project import ProjectBase, ProjectCreate, ProjectUpdate, ProjectResponse
+from app.schemas.document import (
+    DocumentBase,
+    DocumentCreate,
+    DocumentUpdate,
+    DocumentResponse,
+    DocumentUploadResponse,
+)
+from app.schemas.variable import (
+    VariableBase,
+    VariableCreate,
+    VariableUpdate,
+    VariableResponse,
+)
+from app.schemas.podium_access import (
+    PodiumAccessBase,
+    PodiumAccessCreate,
+    PodiumAccessRead,
+)
+from app.schemas.chat_message import (
+    ChatMessageBase,
+    ChatMessageCreate,
+    ChatMessageRead,
 )
 
 __all__ = [
@@ -53,5 +72,29 @@ __all__ = [
     # Auth schemas
     "RefreshTokenRequest",
     "TokenResponse",
+    # Project schemas
+    "ProjectBase",
+    "ProjectCreate",
+    "ProjectUpdate",
+    "ProjectResponse",
+    # Document schemas
+    "DocumentBase",
+    "DocumentCreate",
+    "DocumentUpdate",
+    "DocumentResponse",
+    "DocumentUploadResponse",
+    # Variable schemas
+    "VariableBase",
+    "VariableCreate",
+    "VariableUpdate",
+    "VariableResponse",
+    # PodiumAccess schemas
+    "PodiumAccessBase",
+    "PodiumAccessCreate",
+    "PodiumAccessRead",
+    # ChatMessage schemas
+    "ChatMessageBase",
+    "ChatMessageCreate",
+    "ChatMessageRead",
 ]
 
