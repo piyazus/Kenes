@@ -50,6 +50,18 @@ from app.schemas.chat_message import (
     ChatMessageCreate,
     ChatMessageRead,
 )
+from app.schemas.risk_alert import (
+    RiskAlertBase,
+    RiskAlertCreate,
+    RiskAlertUpdate,
+    RiskAlertResponse,
+)
+from app.schemas.notification import (
+    NotificationBase,
+    NotificationCreate,
+    NotificationUpdate,
+    NotificationResponse,
+)
 
 __all__ = [
     # User schemas
@@ -96,5 +108,15 @@ __all__ = [
     "ChatMessageBase",
     "ChatMessageCreate",
     "ChatMessageRead",
+    # RiskAlert schemas
+    "RiskAlertBase",
+    "RiskAlertCreate",
+    "RiskAlertUpdate",
+    "RiskAlertResponse",
+    # Notification schemas
+    "NotificationBase",
+    "NotificationCreate",
+    "NotificationUpdate",
+    "NotificationResponse",
 ]
 

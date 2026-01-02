@@ -7,7 +7,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.variable import Variable, VariableType
+from app.models.variable import Variable, ValueType
 from app.schemas.variable import VariableCreate, VariableUpdate
 
 
@@ -15,13 +15,11 @@ def create_variable(db: Session, *, obj_in: VariableCreate) -> Variable:
     """Create a new variable."""
     db_obj = Variable(
         project_id=obj_in.project_id,
-        name=obj_in.name,
-        display_name=obj_in.display_name,
-        type=obj_in.type,
-        value=obj_in.value,
-        unit=obj_in.unit,
-        description=obj_in.description,
-        order=obj_in.order,
+        key=obj_in.key,
+        label=obj_in.label,
+        value_type=obj_in.value_type,
+        raw_value=obj_in.raw_value,
+        formula=obj_in.formula,
     )
     db.add(db_obj)
     db.commit()
@@ -43,7 +41,7 @@ def list_variables_for_project(
     return (
         db.query(Variable)
         .filter(Variable.project_id == project_id)
-        .order_by(Variable.order.asc(), Variable.created_at.asc())
+        .order_by(Variable.created_at.asc())
         .all()
     )
 
@@ -77,9 +75,11 @@ def build_context_from_variables(variables: List[Variable]) -> Dict[str, float]:
     """
     context: Dict[str, float] = {}
     for var in variables:
-        if var.type == VariableType.NUMBER:
+        if var.value_type == ValueType.NUMBER:
             try:
-                context[var.name] = float(var.value)
+                # Use calculated_value if available, otherwise raw_value
+                value = var.calculated_value or var.raw_value
+                context[var.key] = float(value)
             except (TypeError, ValueError):
                 continue
     return context

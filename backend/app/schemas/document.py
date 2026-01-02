@@ -28,7 +28,7 @@ class DocumentCreate(DocumentBase):
 class DocumentUpdate(BaseModel):
     status: Optional[DocumentStatus] = None
     extracted_text: Optional[str] = None
-    metadata: Optional[dict] = None
+    meta_data: Optional[dict] = None
 
 
 class DocumentResponse(DocumentBase):
@@ -39,7 +39,7 @@ class DocumentResponse(DocumentBase):
     file_path: str
     status: DocumentStatus
     extracted_text: Optional[str] = None
-    metadata: Optional[dict] = None
+    meta_data: Optional[dict] = None
     created_at: datetime
 
     class Config:

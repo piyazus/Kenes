@@ -16,8 +16,8 @@ from app.crud import podium_access as podium_crud
 from app.crud import variable as variable_crud
 from app.models.project import Project
 from app.schemas.podium_access import PodiumAccessCreate, PodiumAccessRead
-from app.schemas.project import ProjectRead
-from app.schemas.variable import VariableRead
+from app.schemas.project import ProjectResponse
+from app.schemas.variable import VariableResponse
 
 
 logger = logging.getLogger(__name__)
@@ -99,8 +99,8 @@ def get_podium_view(
 
     vars_ = variable_crud.list_variables_for_project(db, project_id=project.id)
 
-    project_data = ProjectRead.model_validate(project)
-    variables_data = [VariableRead.model_validate(v) for v in vars_]
+    project_data = ProjectResponse.model_validate(project)
+    variables_data = [VariableResponse.model_validate(v) for v in vars_]
 
     charts_data: Dict[str, Any] = {
         "variables_count": len(vars_),

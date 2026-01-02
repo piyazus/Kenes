@@ -11,15 +11,13 @@ from app.models.document import Document
 from app.schemas.document import DocumentCreate
 
 
-def create_document(db: Session, *, obj_in: DocumentCreate, uploaded_by: Optional[int]) -> Document:
+def create_document(db: Session, *, obj_in: DocumentCreate, uploaded_by: Optional[int] = None) -> Document:
     """Create a new document record."""
     db_obj = Document(
         project_id=obj_in.project_id,
-        filename=obj_in.filename,
+        file_name=obj_in.file_name,
         file_path=obj_in.file_path,
-        file_size=obj_in.file_size,
-        mime_type=obj_in.mime_type,
-        uploaded_by=uploaded_by,
+        file_type=obj_in.file_type,
     )
     db.add(db_obj)
     db.commit()
@@ -41,7 +39,7 @@ def list_documents_for_project(
     return (
         db.query(Document)
         .filter(Document.project_id == project_id)
-        .order_by(Document.uploaded_at.desc())
+        .order_by(Document.created_at.desc())
         .all()
     )
 

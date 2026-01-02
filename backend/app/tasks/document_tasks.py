@@ -8,7 +8,7 @@ from typing import Callable, Optional
 
 from sqlalchemy.orm import Session
 
-from app.models.document import Document, EmbeddingStatus
+from app.models.document import Document, DocumentStatus
 from app.services.document_processor import extract_text
 
 
@@ -31,17 +31,16 @@ async def process_document(
         if not doc:
             return
 
-        doc.embedding_status = EmbeddingStatus.PROCESSING
+        doc.status = DocumentStatus.PROCESSING
         db.add(doc)
         db.commit()
 
         text = await extract_text(doc.file_path)
         if text:
-            doc.embedding_status = EmbeddingStatus.COMPLETED
-            doc.error_message = None
+            doc.status = DocumentStatus.READY
+            doc.extracted_text = text
         else:
-            doc.embedding_status = EmbeddingStatus.FAILED
-            doc.error_message = "Failed to extract text"
+            doc.status = DocumentStatus.ERROR
 
         db.add(doc)
         db.commit()
@@ -49,8 +48,7 @@ async def process_document(
         if db is not None:
             doc = db.query(Document).filter(Document.id == document_id).first()
             if doc:
-                doc.embedding_status = EmbeddingStatus.FAILED
-                doc.error_message = str(exc)
+                doc.status = DocumentStatus.ERROR
                 db.add(doc)
                 db.commit()
         logger.exception("Document processing failed for id=%s: %s", document_id, exc)

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.core.deps import TestUser, get_current_project, get_current_user, get_db
 from app.crud import project as project_crud
-from app.schemas.project import ProjectCreate, ProjectRead, ProjectUpdate
+from app.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
 
 
 logger = logging.getLogger(__name__)
@@ -21,14 +21,14 @@ router = APIRouter(prefix="/projects", tags=["projects"])
 
 @router.post(
     "/",
-    response_model=ProjectRead,
+    response_model=ProjectResponse,
     status_code=status.HTTP_201_CREATED,
 )
 def create_project(
     payload: ProjectCreate,
     db: Session = Depends(get_db),
     current_user: TestUser = Depends(get_current_user),
-) -> ProjectRead:
+) -> ProjectResponse:
     """Create a new project for the current tenant."""
     if payload.tenant_id != current_user.tenant_id:
         raise HTTPException(
@@ -45,11 +45,11 @@ def create_project(
     return db_obj
 
 
-@router.get("/", response_model=List[ProjectRead])
+@router.get("/", response_model=List[ProjectResponse])
 def list_projects(
     db: Session = Depends(get_db),
     current_user: TestUser = Depends(get_current_user),
-) -> List[ProjectRead]:
+) -> List[ProjectResponse]:
     """List projects for the current tenant."""
     projects = project_crud.list_projects_for_tenant(
         db,
@@ -58,21 +58,21 @@ def list_projects(
     return projects
 
 
-@router.get("/{project_id}", response_model=ProjectRead)
+@router.get("/{project_id}", response_model=ProjectResponse)
 def get_project(
-    project: ProjectRead = Depends(get_current_project),
-) -> ProjectRead:
+    project: ProjectResponse = Depends(get_current_project),
+) -> ProjectResponse:
     """Get project details (tenant-isolated)."""
     return project
 
 
-@router.put("/{project_id}", response_model=ProjectRead)
+@router.put("/{project_id}", response_model=ProjectResponse)
 def update_project(
     project_id: UUID,
     payload: ProjectUpdate,
     db: Session = Depends(get_db),
     current_user: TestUser = Depends(get_current_user),
-) -> ProjectRead:
+) -> ProjectResponse:
     """Update a project if it belongs to the current tenant."""
     db_obj = project_crud.get_project_for_tenant(
         db,

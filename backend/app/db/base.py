@@ -9,14 +9,5 @@ class Base(DeclarativeBase):
     pass
 
 
-# Import models so Alembic can discover them via Base.metadata
-from app.models import (  # noqa: F401,E402
-    User,
-    Tenant,
-    Client,
-    Project,
-    Document,
-    Variable,
-    PodiumAccess,
-    ChatMessage,
-)
+# Note: Models are imported in alembic/env.py to avoid circular imports
+# Alembic will discover models through: from app import models

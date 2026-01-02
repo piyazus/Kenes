@@ -11,7 +11,7 @@
 from fastapi import APIRouter
 
 from . import auth, clients, health, tenants, users
-from .routers import council, loom, podium, projects
+from .routers import council, loom, notifications, podium, projects
 
 router = APIRouter()
 
@@ -25,3 +25,4 @@ router.include_router(projects.router)
 router.include_router(council.router)
 router.include_router(loom.router)
 router.include_router(podium.router)
+router.include_router(notifications.router)
