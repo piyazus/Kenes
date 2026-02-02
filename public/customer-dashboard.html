@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Kenes</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/tables.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container navbar-container">
+            <div class="navbar-brand">
+                <a href="index.html">Kenes</a>
+            </div>
+
+            <button class="navbar-toggle" aria-label="Toggle navigation">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+
+            <ul class="navbar-menu">
+                <li><a href="#" class="active">Dashboard</a></li>
+                <li><a href="#">My Applications</a></li>
+                <li><a href="#">Documents</a></li>
+                <li><a href="#">Profile</a></li>
+            </ul>
+
+            <div class="navbar-user" style="margin-left: auto;">
+                <span style="font-weight: 600; color: var(--color-gray-900);">John Doe</span>
+                <a href="index.html" class="btn btn-text" style="font-size: 14px; margin-left: 12px;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+
+        <header class="dashboard-header">
+            <div class="dashboard-welcome">
+                <h1>Dashboard</h1>
+                <p>Welcome back, John. Here is your lending overview.</p>
+            </div>
+            <div>
+                <button class="btn btn-primary">+ New Application</button>
+            </div>
+        </header>
+
+        <!-- Stats Row -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Active Applications</div>
+                <div class="stat-value">1</div>
+                <div class="stat-trend">In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Pending Documents</div>
+                <div class="stat-value" style="color: var(--color-warning);">2</div>
+                <div class="stat-trend negative">Action Required</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Proposals Received</div>
+                <div class="stat-value">0</div>
+                <div class="stat-trend">Awaiting review</div>
+            </div>
+        </section>
+
+        <!-- Recent Activity Section -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Recent Activity</h2>
+                <a href="#" class="btn btn-text" style="font-size: 14px;">View All</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>Service Type</th>
+                            <th>Date Submitted</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#APP-2023-001</td>
+                            <td>SME Business Loan</td>
+                            <td>Oct 24, 2023</td>
+                            <td><span class="badge badge-warning">Processing</span></td>
+                            <td>
+                                <div class="action-cell">
+                                    <button class="btn-icon" title="View Details">👁️</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#APP-2023-002</td>
+                            <td>Equipment Financing</td>
+                            <td>Sep 15, 2023</td>
+                            <td><span class="badge badge-neutral">Draft</span></td>
+                            <td>
+                                <div class="action-cell">
+                                    <button class="btn-icon" title="Edit">✏️</button>
+                                    <button class="btn-icon" title="Delete">🗑️</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="js/navbar.js"></script>
+</body>
+
+</html>

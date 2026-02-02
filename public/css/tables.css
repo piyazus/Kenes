@@ -1,0 +1,113 @@
+/* Table Styles - YC Dense */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border: none;
+    background: transparent;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+    font-size: 10pt;
+}
+
+.table th,
+.table td {
+    padding: 4px 8px;
+    /* Tighter padding */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f6f6ef;
+    color: #828282;
+    font-weight: bold;
+    font-size: 9pt;
+    text-transform: none;
+    letter-spacing: normal;
+    border-bottom: 1px solid #000;
+}
+
+.table tr:nth-child(even) {
+    background-color: #fcfcfc;
+}
+
+
+.table td {
+    font-size: var(--font-size-body);
+    color: var(--color-gray-700);
+}
+
+/* Zebra Striping */
+.table tbody tr:nth-child(even) {
+    background-color: var(--color-gray-50);
+}
+
+.table tbody tr:hover {
+    background-color: var(--color-green-faint);
+    /* #E8F5E9 */
+}
+
+/* Status Badges within Tables */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: var(--font-weight-semibold);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.badge-success {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+}
+
+/* Green */
+.badge-warning {
+    background-color: #FFF3E0;
+    color: #EF6C00;
+}
+
+/* Orange */
+.badge-error {
+    background-color: #FFEBEE;
+    color: #C62828;
+}
+
+/* Red */
+.badge-neutral {
+    background-color: #F5F5F5;
+    color: #616161;
+}
+
+/* Gray */
+
+/* Action Buttons in Cell */
+.action-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-gray-700);
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-icon:hover {
+    background-color: var(--color-green-faint);
+    color: var(--color-green-primary);
+}

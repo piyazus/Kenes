@@ -1,0 +1,160 @@
+/* Navigation Bar Styles - YC Style */
+
+.navbar {
+    background-color: var(--color-green-primary);
+    height: 24px;
+    /* Very thin header like HN */
+    line-height: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* box-shadow removed via variable, but ensuring clean border */
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: var(--color-white);
+    /* White text on green */
+    padding-right: 10px;
+    margin-right: 5px;
+    border-right: 1px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand a {
+    color: white;
+}
+
+.navbar-brand:hover {
+    color: var(--color-green-hover);
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar Links */
+.navbar-menu li a {
+    font-size: var(--font-size-body);
+    color: var(--color-white);
+    padding: 0 5px;
+    font-weight: normal;
+    transition: all var(--transition-fast);
+}
+
+.navbar-menu li a:hover {
+    text-decoration: underline;
+}
+
+.navbar-menu li a.active {
+    color: white;
+    text-decoration: underline;
+}
+
+/* User Menu / Auth Buttons */
+.navbar-user {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+}
+
+/* Mobile Toggle - Hidden for pure YC desktop feel,
+   but needed for mobile. Let's make it simple text [Menu] */
+.navbar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.hamburger-line {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    background-color: var(--color-gray-900);
+    border-radius: 2px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-menu {
+        position: fixed;
+        top: 64px;
+        /* Height of navbar */
+        left: -100%;
+        flex-direction: column;
+        background-color: var(--color-white);
+        width: 100%;
+        height: calc(100vh - 64px);
+        padding: var(--space-xl) var(--space-md);
+        border-top: 1px solid var(--color-gray-300);
+        transition: 0.3s;
+        gap: var(--space-md);
+        box-shadow: var(--shadow-md);
+    }
+
+    .navbar-menu.active {
+        left: 0;
+    }
+
+    .navbar-menu li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar-menu li a {
+        display: block;
+        width: 100%;
+        padding: 12px;
+    }
+
+    /* Move user buttons into the menu on mobile if needed,
+     or keep them visible. For simplicity, we keep them visible in top bar if small,
+     or hide and show in menu. Let's keep them in top bar for now or
+     shift to menu if too crowded.
+  */
+    .navbar-user {
+        display: none;
+        /* Hide in header, maybe move to menu? */
+    }
+
+    /* Add user items to menu for mobile logic would require JS to move them,
+     or duplication. For this phase, let's assume desktop-first and simple hide/show.
+  */
+}
+
+/* Active hamburger animation */
+.navbar-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar-toggle.active .hamburger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.navbar-toggle.active .hamburger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}

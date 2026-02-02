@@ -1,0 +1,172 @@
+/* Shared Form Styles */
+
+/* Centered Form Container (Login/Register) */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Move to top slightly */
+    padding-top: 80px;
+    min-height: calc(100vh - 64px);
+    background-color: var(--color-white);
+}
+
+.auth-card {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    width: 100%;
+    max-width: 400px;
+    /* Bit narrower for document feel */
+}
+
+.auth-header {
+    text-align: left;
+    /* Align left for document style */
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--color-gray-300);
+    padding-bottom: 20px;
+}
+
+.auth-header h1 {
+    color: var(--color-gray-900);
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: var(--font-weight-regular);
+    /* Lighter weight */
+    font-size: var(--font-size-small);
+    color: var(--color-gray-700);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Input Styles */
+.form-control {
+    width: 100%;
+    padding: 12px 0;
+    /* No horizontal padding, bottom border style */
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid var(--color-gray-300);
+    /* Bottom border only */
+    border-radius: 0;
+    background-color: transparent;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-green-primary);
+    box-shadow: none;
+    background-color: var(--color-gray-50);
+    /* Slight highlight on focus */
+}
+
+.form-control::placeholder {
+    color: var(--color-gray-500);
+}
+
+/* Validation States */
+.form-control.is-valid {
+    border-left: 4px solid var(--color-success);
+}
+
+.form-control.is-invalid {
+    border-left: 4px solid var(--color-error);
+    border-color: var(--color-error);
+    /* Also color the border */
+}
+
+/* Validation Messages */
+.feedback-message {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    min-height: 18px;
+    /* reserve space */
+}
+
+.invalid-feedback {
+    color: var(--color-error);
+    display: none;
+}
+
+.form-control.is-invalid~.invalid-feedback {
+    display: block;
+}
+
+/* Textarea specific */
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Checkboxes */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.form-check-input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-green-primary);
+    cursor: pointer;
+}
+
+.form-check-label {
+    font-size: var(--font-size-small);
+    color: var(--color-gray-700);
+    cursor: pointer;
+}
+
+/* Form Footer (Links) */
+.auth-footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: var(--font-size-small);
+    color: var(--color-gray-700);
+}
+
+.auth-footer a {
+    color: var(--color-green-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Password strength indicator (optional for now, but placeholder css) */
+.password-strength {
+    height: 4px;
+    background-color: var(--color-gray-300);
+    margin-top: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    width: 100%;
+    display: none;
+    /* Show when typing */
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s, background-color 0.3s;
+}

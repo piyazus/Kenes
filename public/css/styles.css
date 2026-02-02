@@ -1,0 +1,138 @@
+/* 
+   Kenes Lending Platform - YC / Utility Design
+   Aesthetic: Brutalist, Dense, Functional.
+*/
+
+:root {
+    /* Color Palette - YC Style */
+    --color-green-primary: #2D5F3F;
+    /* The "Hacker News Orange" equivalent */
+    --color-bg-body: #f6f6ef;
+    /* Classic YC Beige/Off-white */
+    --color-white: #FFFFFF;
+
+    --color-text-main: #000000;
+    --color-text-sub: #828282;
+
+    --color-border: #dddddd;
+
+    /* Status Colors */
+    --color-error: #D32F2F;
+    --color-success: #2D5F3F;
+
+    /* Spacing System (Compact) */
+    --space-xs: 2px;
+    --space-sm: 5px;
+    --space-md: 10px;
+    --space-lg: 15px;
+    --space-xl: 30px;
+
+    /* Typography - The "System" Look */
+    --font-family-sans: Verdana, Geneva, sans-serif;
+
+    --font-size-h1: 18px;
+    --font-size-h2: 15px;
+    --font-size-h3: 13px;
+    --font-size-body: 10pt;
+    /* ~13.33px */
+    --font-size-small: 8pt;
+
+    --font-weight-regular: 400;
+    --font-weight-bold: 700;
+
+    /* No Radius, No Shadow */
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+}
+
+/* Reset & Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-body);
+    color: var(--color-text-main);
+    background-color: var(--color-bg-body);
+    line-height: 1.4;
+}
+
+h1,
+h2,
+h3 {
+    color: var(--color-text-main);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-md);
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-text-main);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Containers - The YC "Page" Look */
+.container {
+    max-width: 960px;
+    /* Tighter width */
+    margin: 0 auto;
+    padding: 0;
+    background-color: var(--color-bg-body);
+}
+
+.mt-1 {
+    margin-top: var(--space-sm);
+}
+
+.mt-2 {
+    margin-top: var(--space-md);
+}
+
+.mt-3 {
+    margin-top: var(--space-lg);
+}
+
+.mt-4 {
+    margin-top: var(--space-xl);
+}
+
+/* Buttons - Simple & Ugly */
+.btn {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    border: 1px solid var(--color-border);
+    background: #EEE;
+    color: #000;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--color-green-primary);
+    color: #fff;
+    border-color: var(--color-green-primary);
+}
+
+.btn-primary:active {
+    background-color: #1a3c26;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-text-sub);
+}
