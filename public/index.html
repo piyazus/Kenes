@@ -7,14 +7,28 @@
     <title>Kenes - Lending Consultation Platform</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/navbar.css">
-    <!-- Google Fonts: Inter -->
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Global Navigation -->
+
+    <div class="background-glow" style="
+        position: fixed;
+        top: -20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 600px;
+        background: var(--gradient-glow);
+        filter: blur(120px);
+        opacity: 0.3;
+        z-index: -1;
+        pointer-events: none;
+    "></div>
+
     <nav class="navbar">
-        <div class="container navbar-container">
+        <div class="navbar-container">
             <div class="navbar-brand">
                 <a href="index.html">Kenes</a>
             </div>
@@ -29,52 +43,44 @@
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="about.html">About</a></li>
                 <li><a href="services.html">Services</a></li>
-
-                <!-- Mobile only auth links could go here if we wanted -->
-                <li><a href="login.html" class="btn btn-text">Login</a></li>
-                <!-- For desktop alignment, we might want these separate, but putting in menu is easier for now -->
-                <li><a href="register-customer.html" class="btn btn-primary"
-                        style="padding: 8px 16px; color: white;">Register</a></li>
+                <li style="margin-left: 20px;"><a href="login.html" class="btn btn-secondary">Login</a></li>
+                <li><a href="register-customer.html" class="btn btn-primary">Start Now</a></li>
             </ul>
-
-            <!-- Desktop User Menu (Hidden on mobile) -->
-            <!-- Note: In this simple version, links are in the menu. 
-                 Robust version would separate them. -->
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="container mt-4">
-        <div style="padding: 60px 0; text-align: center; max-width: 800px; margin: 0 auto;">
-            <h1 style="color: var(--color-green-primary); margin-bottom: 16px;">Expert Lending Consultation</h1>
-            <p class="text-secondary" style="font-size: 18px; margin-bottom: 32px;">
-                Secure the funding you need with professional guidance and AI-driven risk analysis.
-                Simple, transparent, and efficient.
+    <section class="container" style="padding-top: 100px; padding-bottom: 80px; text-align: center;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="margin-bottom: 24px; font-size: 64px; letter-spacing: -2px;">
+                Expert Lending <br />
+                <span class="text-gradient">Consultation & AI Analysis</span>
+            </h1>
+            <p style="font-size: 20px; line-height: 1.6; color: var(--color-text-sub); margin-bottom: 40px;">
+                Secure the funding you need with professional guidance and AI-driven risk models.
+                Simple, transparent, and built for the future.
             </p>
             <div style="display: flex; gap: 16px; justify-content: center;">
-                <a href="register-customer.html" class="btn btn-primary">Get Started</a>
-                <a href="login.html" class="btn btn-secondary">Login</a>
+                <a href="register-customer.html" class="btn btn-primary"
+                    style="padding: 16px 32px; font-size: 16px;">Get Started</a>
+                <a href="login.html" class="btn btn-secondary" style="padding: 16px 32px; font-size: 16px;">Member
+                    Login</a>
             </div>
         </div>
     </section>
 
-    <!-- Features Placeholder -->
-    <section class="container mt-4 mb-4">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
-            <div
-                style="background: white; padding: 24px; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--color-gray-300);">
-                <h3 style="margin-bottom: 12px; color: var(--color-green-primary);">Smart Analysis</h3>
-                <p class="text-secondary">AI-powered risk assessment to improve your approval chances.</p>
+    <section class="container mb-4">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+            <div class="glass-card">
+                <h3 style="color: #115202; margin-bottom: 8px;">Smart Analysis</h3>
+                <p>AI-powered risk assessment to visualize your approval odds instantly.</p>
             </div>
-            <div
-                style="background: white; padding: 24px; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--color-gray-300);">
-                <h3 style="margin-bottom: 12px; color: var(--color-green-primary);">Expert Consultants</h3>
-                <p class="text-secondary">Verified professionals to guide you through the process.</p>
+            <div class="glass-card">
+                <h3 style="color: #115202; margin-bottom: 8px;">Expert Consultants</h3>
+                <p>Verified financial professionals to guide you through every step.</p>
             </div>
-            <div
-                style="background: white; padding: 24px; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--color-gray-300);">
-                <h3 style="margin-bottom: 12px; color: var(--color-green-primary);">Secure & Private</h3>
-                <p class="text-secondary">Your data is encrypted and handled with strict confidentiality.</p>
+            <div class="glass-card">
+                <h3 style="color: #115202; margin-bottom: 8px;">Secure & Private</h3>
+                <p>Enterprise-grade encryption ensures your financial data stays private.</p>
             </div>
         </div>
     </section>

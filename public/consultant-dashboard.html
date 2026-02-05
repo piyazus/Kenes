@@ -58,33 +58,33 @@
         <!-- Stats Row -->
         <section class="stats-grid">
             <div class="stat-card">
-                <div class="stat-title">Total Customers</div>
+                <div class="stat-title">Active Customers</div>
                 <div class="stat-value">124</div>
                 <div class="stat-trend positive">+12% this month</div>
             </div>
             <div class="stat-card">
                 <div class="stat-title">Pending Applications</div>
                 <div class="stat-value" style="color: var(--color-warning);">8</div>
-                <div class="stat-trend">Needs Review</div>
+                <div class="stat-trend">Needs AI Analysis</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Proposals Sent</div>
+                <div class="stat-title">Proposals Generated</div>
                 <div class="stat-value">45</div>
                 <div class="stat-trend positive">This Month</div>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Approval Rate</div>
-                <div class="stat-value">78%</div>
-                <div class="stat-trend positive">+2.4% vs last mo</div>
+                <div class="stat-title">Service Catalogue</div>
+                <div class="stat-value">12</div>
+                <div class="stat-trend">Active Products</div>
             </div>
         </section>
 
-        <!-- New Applications Queue -->
+        <!-- Applications Queue -->
         <section>
             <div class="section-header">
-                <h2 class="section-title">New Applications Queue</h2>
+                <h2 class="section-title">Applications Queue</h2>
                 <div style="display: flex; gap: 8px;">
-                    <input type="text" placeholder="Search..." class="form-control"
+                    <input type="text" placeholder="Search by customer or IIN..." class="form-control"
                         style="width: 200px; padding: 6px 12px; font-size: 14px;">
                 </div>
             </div>
@@ -95,52 +95,51 @@
                         <tr>
                             <th style="width: 40px;"><input type="checkbox"></th>
                             <th>App ID</th>
-                            <th>Customer</th>
+                            <th>Customer (IIN)</th>
                             <th>Service Requested</th>
-                            <th>Submission Date</th>
-                            <th>Risk Score</th>
-                            <th>Status</th>
+                            <th>AI Score</th>
+                            <th>Risk Level</th>
+                            <th>Bank Decision</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><input type="checkbox"></td>
-                            <td>#APP-2023-042</td>
-                            <td>Acme Corp Ltd.</td>
+                            <td>#APP-1042</td>
+                            <td>Acme Corp (900101...)</td>
                             <td>SME Working Capital</td>
-                            <td>Today, 10:23 AM</td>
                             <td><span style="color: var(--color-gray-500);">-</span></td>
-                            <td><span class="badge badge-warning">New</span></td>
+                            <td><span class="badge badge-neutral">Pending AI</span></td>
+                            <td><span class="badge badge-warning">Pending</span></td>
                             <td>
                                 <div class="action-cell">
-                                    <button class="btn-icon" title="Review">👁️</button>
-                                    <button class="btn-icon" title="Assign">👤</button>
+                                    <button class="btn-icon" title="Run AI Analysis">🤖</button>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td><input type="checkbox"></td>
-                            <td>#APP-2023-041</td>
-                            <td>TechStart Inc.</td>
+                            <td>#APP-1041</td>
+                            <td>TechStart (850202...)</td>
                             <td>Equipment Leasing</td>
-                            <td>Yesterday</td>
-                            <td><span style="color: green; font-weight: bold;">Low</span></td>
-                            <td><span class="badge badge-success">Analyzed</span></td>
+                            <td><strong>85/100</strong></td>
+                            <td><span style="color: #00FF41; font-weight: bold;">Low</span></td>
+                            <td><span class="badge badge-success">Approved</span></td>
                             <td>
                                 <div class="action-cell">
-                                    <button class="btn-icon" title="Create Proposal">📝</button>
+                                    <button class="btn-icon" title="View Proposal">📝</button>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td><input type="checkbox"></td>
-                            <td>#APP-2023-039</td>
-                            <td>Local Retailer</td>
+                            <td>#APP-1039</td>
+                            <td>Local Retailer (920303...)</td>
                             <td>Microcredit</td>
-                            <td>Oct 22, 2023</td>
+                            <td><strong>30/100</strong></td>
                             <td><span style="color: red; font-weight: bold;">High</span></td>
-                            <td><span class="badge badge-error">Flagged</span></td>
+                            <td><span class="badge badge-error">Rejected</span></td>
                             <td>
                                 <div class="action-cell">
                                     <button class="btn-icon" title="Review Risk">⚠️</button>
@@ -149,10 +148,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <div style="margin-top: 16px; text-align: right; font-size: 14px; color: var(--color-gray-700);">
-                Showing 1-3 of 8 items
             </div>
         </section>
 

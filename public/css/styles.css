@@ -1,53 +1,61 @@
 /* 
-   Kenes Lending Platform - YC / Utility Design
-   Aesthetic: Brutalist, Dense, Functional.
+   Kenes Lending Platform - Dark AI Theme
+   Aesthetic: Modern, Dark Mode, Glassmorphism, Glowing.
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-    /* Color Palette - YC Style */
-    --color-green-primary: #2D5F3F;
-    /* The "Hacker News Orange" equivalent */
-    --color-bg-body: #f6f6ef;
-    /* Classic YC Beige/Off-white */
-    --color-white: #FFFFFF;
+    /* Color Palette - Dark AI */
+    --color-bg-body: #050505;
+    --color-bg-card: #0F0F0F;
+    
+    /* Gradients & Accents */
+    --gradient-primary: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+    --gradient-glow: linear-gradient(135deg, rgba(0, 198, 255, 0.5) 0%, rgba(0, 114, 255, 0.5) 100%);
+    --color-primary-glow: rgba(0, 198, 255, 0.6);
+    
+    /* Text Colors */
+    --color-text-main: #FFFFFF;
+    --color-text-sub: #A3A3A3;
+    --color-text-muted: #666666;
 
-    --color-text-main: #000000;
-    --color-text-sub: #828282;
+    /* Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    
+    /* Spacing System */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 48px;
+    --space-xxl: 80px;
 
-    --color-border: #dddddd;
-
-    /* Status Colors */
-    --color-error: #D32F2F;
-    --color-success: #2D5F3F;
-
-    /* Spacing System (Compact) */
-    --space-xs: 2px;
-    --space-sm: 5px;
-    --space-md: 10px;
-    --space-lg: 15px;
-    --space-xl: 30px;
-
-    /* Typography - The "System" Look */
-    --font-family-sans: Verdana, Geneva, sans-serif;
-
-    --font-size-h1: 18px;
-    --font-size-h2: 15px;
-    --font-size-h3: 13px;
-    --font-size-body: 10pt;
-    /* ~13.33px */
-    --font-size-small: 8pt;
+    /* Typography */
+    --font-family-sans: 'Inter', sans-serif;
+    
+    --font-size-h1: 48px;
+    --font-size-h2: 32px;
+    --font-size-h3: 20px;
+    --font-size-body: 16px;
+    --font-size-small: 14px;
 
     --font-weight-regular: 400;
-    --font-weight-bold: 700;
+    --font-weight-medium: 500;
+    --font-weight-bold: 600;
+    --font-weight-extrabold: 700;
 
-    /* No Radius, No Shadow */
-    --radius-sm: 0;
-    --radius-md: 0;
-    --radius-lg: 0;
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
 
-    --shadow-sm: none;
-    --shadow-md: none;
-    --shadow-lg: none;
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+    --shadow-lg: 0 8px 32px rgba(0 198 255 / 15%);
 }
 
 /* Reset & Base Styles */
@@ -62,77 +70,109 @@ body {
     font-size: var(--font-size-body);
     color: var(--color-text-main);
     background-color: var(--color-bg-body);
-    line-height: 1.4;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
     color: var(--color-text-main);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-extrabold);
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+    letter-spacing: -0.02em;
+}
+
+p {
+    color: var(--color-text-sub);
     margin-bottom: var(--space-md);
 }
 
 a {
     text-decoration: none;
     color: var(--color-text-main);
+    transition: color 0.2s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: #00C6FF;
 }
 
-/* Containers - The YC "Page" Look */
+/* Containers */
 .container {
-    max-width: 960px;
-    /* Tighter width */
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0;
-    background-color: var(--color-bg-body);
+    padding: 0 var(--space-md);
 }
 
-.mt-1 {
-    margin-top: var(--space-sm);
-}
+/* Utility Margins */
+.mt-1 { margin-top: var(--space-sm); }
+.mt-2 { margin-top: var(--space-md); }
+.mt-3 { margin-top: var(--space-lg); }
+.mt-4 { margin-top: var(--space-xl); }
+.mb-4 { margin-bottom: var(--space-xl); }
 
-.mt-2 {
-    margin-top: var(--space-md);
-}
-
-.mt-3 {
-    margin-top: var(--space-lg);
-}
-
-.mt-4 {
-    margin-top: var(--space-xl);
-}
-
-/* Buttons - Simple & Ugly */
-.btn {
+/* Text Utilities */
+.text-center { text-align: center; }
+.text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: inline-block;
-    padding: 4px 10px;
+}
+.text-secondary { color: var(--color-text-sub); }
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
     font-size: var(--font-size-small);
-    font-weight: bold;
-    border: 1px solid var(--color-border);
-    background: #EEE;
-    color: #000;
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-sm);
     text-decoration: none !important;
     cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
 .btn-primary {
-    background-color: var(--color-green-primary);
+    background: var(--gradient-primary);
     color: #fff;
-    border-color: var(--color-green-primary);
+    box-shadow: 0 0 15px rgba(0, 198, 255, 0.4);
 }
 
-.btn-primary:active {
-    background-color: #1a3c26;
+.btn-primary:hover {
+    box-shadow: 0 0 25px rgba(0, 198, 255, 0.6);
+    transform: translateY(-1px);
+    color: #fff;
 }
 
-.btn-text {
-    background: none;
-    border: none;
-    padding: 0;
-    color: var(--color-text-sub);
+.btn-secondary {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--color-text-main);
+    backdrop-filter: blur(5px);
+}
+
+.btn-secondary:hover {
+    border-color: #00C6FF;
+    background: rgba(0, 198, 255, 0.1);
+}
+
+/* Glass Card */
+.glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: rgba(0, 198, 255, 0.3);
+    box-shadow: var(--shadow-lg);
+    background: rgba(255, 255, 255, 0.05);
 }
