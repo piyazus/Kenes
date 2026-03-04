@@ -1,122 +1,216 @@
+/* ============================================================
+   NAVBAR — Kenes Platform
+   ============================================================ */
+
 .navbar {
-    background-color: transparent;
-    border-bottom: none;
-    height: 80px;
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border);
+    height: 60px;
     display: flex;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 1000;
+    padding: 0 32px;
 }
 
 .navbar-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    /* Align left */
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 var(--space-md);
-    gap: var(--space-lg);
+    justify-content: space-between;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .navbar-brand a {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: #FF6600;
-    /* YC Orange Box */
-    color: #FFFFFF;
+    width: 36px;
+    height: 36px;
+    background: var(--yc-orange);
+    color: #fff;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 800;
     text-decoration: none;
-    font-family: var(--font-family-sans);
-    /* Usually sans for logo */
+    border-radius: var(--radius-sm);
 }
 
+.navbar-brand a:hover {
+    background: var(--yc-orange-hover);
+    color: #fff;
+}
+
+.navbar-brand-text {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--yc-orange);
+    text-decoration: none;
+}
+
+.navbar-badge {
+    font-size: 11px;
+    background: var(--bg-light);
+    padding: 2px 8px;
+    border-radius: 100px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Nav links */
 .navbar-menu {
-    display: flex;
-    gap: var(--space-md);
     list-style: none;
+    display: flex;
     align-items: center;
-}
-
-.navbar-menu-left {
-    margin-right: auto;
-    margin-left: 0;
-}
-
-.navbar-menu-right {
-    margin-left: auto;
-    /* Default behavior if only right menu causes push */
-}
-
-/* YC links are very plain */
-.navbar-menu li a {
-    color: var(--color-text-main);
-    font-size: 15px;
-    font-weight: 400;
+    gap: 4px;
+    margin: 0;
     padding: 0;
-    border-radius: 0;
 }
 
-.navbar-menu li a:hover {
+.navbar-menu a {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: var(--radius);
     text-decoration: none;
-    color: #000;
-    background: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
-/* Hide login/start buttons if not needed in plain text view, or style them simply */
-.navbar-menu .btn {
-    padding: 8px 16px;
+.navbar-menu a:hover {
+    background: var(--bg-light);
+    color: var(--yc-orange);
 }
 
+.navbar-menu a.active {
+    color: var(--yc-orange);
+    background: var(--yc-orange-light);
+}
+
+/* Right section */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar-user-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+/* Language switcher */
+.lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--bg-light);
+    border-radius: var(--radius);
+    padding: 2px;
+}
+
+.lang-switcher a {
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.lang-switcher a:hover {
+    color: var(--text-primary);
+}
+
+.lang-switcher a.active-lang {
+    background: var(--bg-white);
+    color: var(--yc-orange);
+    box-shadow: var(--shadow-xs);
+}
+
+/* Mobile hamburger */
 .navbar-toggle {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
+    padding: 8px;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .hamburger-line {
     display: block;
-    width: 24px;
+    width: 20px;
     height: 2px;
-    margin: 5px auto;
-    background-color: var(--color-text-main);
-    transition: all 0.3s ease;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: var(--transition);
 }
 
+/* Dropdown arrow */
+.nav-arrow {
+    width: 12px;
+    height: 12px;
+    opacity: 0.5;
+}
 
+/* Mobile responsive */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+
     .navbar-toggle {
-        display: block;
+        display: flex;
     }
 
     .navbar-menu {
-        position: fixed;
-        top: 70px;
+        display: none;
+        position: absolute;
+        top: 60px;
         left: 0;
-        width: 100%;
-        height: calc(100vh - 70px);
-        background-color: #FFFFFF;
+        right: 0;
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border);
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-xl);
-        transform: translateX(100%);
-        transition: transform 0.3s ease-in-out;
-        border-top: 1px solid var(--glass-border);
+        padding: 16px;
+        gap: 4px;
+        box-shadow: var(--shadow-md);
     }
 
-    .navbar-menu.active {
-        transform: translateX(0);
+    .navbar-menu.open {
+        display: flex;
     }
 
-    .navbar-menu li a {
-        font-size: var(--font-size-h3);
+    .navbar-menu a {
+        width: 100%;
+        padding: 12px 16px;
+    }
+
+    .navbar-right {
+        gap: 8px;
+    }
+
+    .lang-switcher {
+        font-size: 11px;
     }
 }

@@ -1,113 +1,117 @@
-/* Table Styles - YC Dense */
+/* ============================================================
+   TABLES — Kenes Platform
+   ============================================================ */
 
 .table-responsive {
-    width: 100%;
     overflow-x: auto;
-    border: none;
-    background: transparent;
+    -webkit-overflow-scrolling: touch;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
-    font-size: 10pt;
+    font-size: 14px;
 }
 
-.table th,
-.table td {
-    padding: 4px 8px;
-    /* Tighter padding */
+.table thead th {
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    background: var(--bg-light);
 }
 
-.table th {
-    background-color: #f6f6ef;
-    color: #828282;
-    font-weight: bold;
-    font-size: 9pt;
-    text-transform: none;
-    letter-spacing: normal;
-    border-bottom: 1px solid #000;
-}
-
-.table tr:nth-child(even) {
-    background-color: #fcfcfc;
-}
-
-
-.table td {
-    font-size: var(--font-size-body);
-    color: var(--color-gray-700);
-}
-
-/* Zebra Striping */
-.table tbody tr:nth-child(even) {
-    background-color: var(--color-gray-50);
+.table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+    vertical-align: middle;
 }
 
 .table tbody tr:hover {
-    background-color: var(--color-green-faint);
-    /* #E8F5E9 */
+    background: var(--yc-orange-light);
 }
 
-/* Status Badges within Tables */
-.badge {
-    display: inline-block;
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table card wrapper */
+.table-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+/* Inline edit styling */
+.table .inline-edit {
     padding: 4px 8px;
-    font-size: 12px;
-    font-weight: var(--font-weight-semibold);
-    border-radius: 12px;
-    text-align: center;
-}
-
-.badge-success {
-    background-color: #E8F5E9;
-    color: #2E7D32;
-}
-
-/* Green */
-.badge-warning {
-    background-color: #FFF3E0;
-    color: #EF6C00;
-}
-
-/* Orange */
-.badge-error {
-    background-color: #FFEBEE;
-    color: #C62828;
-}
-
-/* Red */
-.badge-neutral {
-    background-color: #F5F5F5;
-    color: #616161;
-}
-
-/* Gray */
-
-/* Action Buttons in Cell */
-.action-cell {
-    display: flex;
-    gap: 8px;
-}
-
-.btn-icon {
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 13px;
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    color: var(--color-gray-700);
-    background: transparent;
-    border: 1px solid transparent;
-    transition: all 0.2s;
-    cursor: pointer;
 }
 
-.btn-icon:hover {
-    background-color: var(--color-green-faint);
-    color: var(--color-green-primary);
+.table .inline-edit:focus {
+    border-color: var(--yc-orange);
+    outline: none;
+}
+
+/* Filter tabs */
+.filter-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-tab {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--bg-white);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-tab:hover {
+    border-color: var(--yc-orange);
+    color: var(--yc-orange);
+}
+
+.filter-tab.active {
+    background: var(--yc-orange);
+    color: #fff;
+    border-color: var(--yc-orange);
+}
+
+/* Search bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 8px 14px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-white);
+    outline: none;
+}
+
+.search-bar input:focus {
+    border-color: var(--yc-orange);
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
 }

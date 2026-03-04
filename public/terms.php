@@ -1,41 +1,44 @@
 <?php include 'includes/header.php'; ?>
 
-<div class="container mt-4">
-    <header style="margin: 60px 0 40px; border-bottom: 1px solid var(--color-gray-300); padding-bottom: 24px;">
-        <h1 style="font-size: 32px;">Terms of Service</h1>
-        <p class="text-secondary">Last updated: February 18, 2026</p>
-    </header>
+<main class="container" style="padding: 48px 24px 80px; max-width: 800px;">
+    <h1><?= __('footer.terms') ?></h1>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 32px;">Last updated: March 2026</p>
 
-    <section style="margin-bottom: 80px; max-width: 800px;">
-        <h2 style="font-size: 20px; margin-bottom: 16px;">1. Agreement to Terms</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            By accessing or using the services provided by Kenes, you agree to be bound by these Terms of Service.
-            If you do not agree to these terms, you may not use our services.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">2. Services Provided</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            Kenes provides financial consultation and related services. We reserve the right to modify or
-            discontinue our services at any time.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">3. User Responsibilities</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            You are responsible for providing accurate information and maintaining the confidentiality of your
-            account credentials.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">4. Limitation of Liability</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            Kenes shall not be liable for any indirect, incidental, or consequential damages arising from the use of
-            our services.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">5. Governing Law</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            These Terms of Service are governed by the laws of the Republic of Kazakhstan.
-        </p>
+    <section style="margin-bottom: 32px;">
+        <h3>1. Acceptance of Terms</h3>
+        <p>By using the Kenes platform, you agree to these Terms of Service. If you do not agree, please do not use our
+            services.</p>
     </section>
-</div>
+
+    <section style="margin-bottom: 32px;">
+        <h3>2. Services Provided</h3>
+        <p>Kenes provides a digital platform for loan application management, AI-powered financial analysis, and
+            consultant review services for the Damu entrepreneurship fund. We act as intermediaries and do not guarantee
+            loan approval.</p>
+    </section>
+
+    <section style="margin-bottom: 32px;">
+        <h3>3. User Responsibilities</h3>
+        <p>You are responsible for providing accurate and truthful information. Submitting fraudulent documents or false
+            information is prohibited and may result in account termination and legal action.</p>
+    </section>
+
+    <section style="margin-bottom: 32px;">
+        <h3>4. Account Security</h3>
+        <p>You are responsible for maintaining the security of your account credentials. Notify us immediately if you
+            suspect unauthorized access to your account.</p>
+    </section>
+
+    <section style="margin-bottom: 32px;">
+        <h3>5. Limitation of Liability</h3>
+        <p>Kenes is not liable for bank decisions regarding loan applications. Our services enhance the quality of
+            applications but do not guarantee any specific outcome.</p>
+    </section>
+
+    <section>
+        <h3>6. Contact</h3>
+        <p>For legal inquiries: <a href="mailto:legal@kenes.kz">legal@kenes.kz</a></p>
+    </section>
+</main>
 
 <?php include 'includes/footer.php'; ?>

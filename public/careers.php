@@ -1,34 +1,55 @@
 <?php include 'includes/header.php'; ?>
 
-<div class="container mt-4">
-    <header style="margin: 60px 0 40px; border-bottom: 1px solid var(--color-gray-300); padding-bottom: 24px;">
-        <h1 style="font-size: 32px;">Careers at Kenes</h1>
-        <p class="text-secondary">Help us build the formidable enterprises of tomorrow.</p>
-    </header>
+<main class="container" style="padding: 48px 24px 80px; max-width: 800px;">
+    <h1><?= __('nav.careers') ?></h1>
+    <p style="font-size: 18px; margin-bottom: 40px;">Join Kenes and help transform business lending in Kazakhstan.</p>
 
-    <section style="margin-bottom: 80px;">
-        <div style="max-width: 700px;">
-            <p style="font-size: 18px; line-height: 1.6; margin-bottom: 24px;">
-                We are always looking for talented individuals to join our team. If you are passionate about finance,
-                technology, and helping businesses grow, we want to hear from you.
-            </p>
+    <section style="margin-bottom: 40px;">
+        <h2>Why Work at Kenes</h2>
+        <p>We're a fast-growing team combining fintech innovation with deep financial expertise. At Kenes, you'll work
+            on meaningful problems — helping real businesses access funding through cutting-edge AI technology.</p>
+    </section>
 
-            <h2 style="font-size: 20px; margin-top: 40px; margin-bottom: 16px;">Current Openings</h2>
-            <div
-                style="border: 1px solid var(--color-gray-300); border-radius: 8px; padding: 24px; margin-bottom: 16px;">
-                <h3 style="font-size: 18px; margin-bottom: 8px;">Credit Risk Analyst</h3>
-                <p class="text-secondary" style="font-size: 14px; margin-bottom: 16px;">Almaty, Kazakhstan • Full-time
-                </p>
-                <a href="#" class="btn btn-text">Learn More →</a>
+    <section style="margin-bottom: 40px;">
+        <h2>Open Positions</h2>
+
+        <div class="card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h4 style="margin-bottom: 4px;">Senior Financial Consultant</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Full-time · Almaty · Lending
+                        Department</p>
+                </div>
+                <a href="mailto:careers@kenes.kz" class="btn btn-primary btn-sm">Apply</a>
             </div>
+        </div>
 
-            <div style="border: 1px solid var(--color-gray-300); border-radius: 8px; padding: 24px;">
-                <h3 style="font-size: 18px; margin-bottom: 8px;">Senior Software Engineer</h3>
-                <p class="text-secondary" style="font-size: 14px; margin-bottom: 16px;">Remote / Almaty • Full-time</p>
-                <a href="#" class="btn btn-text">Learn More →</a>
+        <div class="card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h4 style="margin-bottom: 4px;">Full-Stack Developer (PHP)</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Full-time · Remote · Engineering
+                    </p>
+                </div>
+                <a href="mailto:careers@kenes.kz" class="btn btn-primary btn-sm">Apply</a>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <h4 style="margin-bottom: 4px;">AI/ML Engineer</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); margin: 0;">Full-time · Almaty/Remote · R&D</p>
+                </div>
+                <a href="mailto:careers@kenes.kz" class="btn btn-primary btn-sm">Apply</a>
             </div>
         </div>
     </section>
-</div>
+
+    <section>
+        <p>Don't see a role that fits? Email <a href="mailto:careers@kenes.kz">careers@kenes.kz</a> with your CV — we're
+            always looking for talented people.</p>
+    </section>
+</main>
 
 <?php include 'includes/footer.php'; ?>

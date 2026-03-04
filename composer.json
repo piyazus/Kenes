@@ -1,0 +1,12 @@
+{
+    "name": "kenes/platform",
+    "description": "Kenes Damu Loan Consulting Platform",
+    "type": "project",
+    "require": {
+        "phpoffice/phpword": "^1.0",
+        "phpoffice/phppresentation": "^0.9"
+    },
+    "autoload": {
+        "psr-4": {}
+    }
+}

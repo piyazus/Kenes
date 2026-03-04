@@ -1,77 +1,52 @@
 <?php include 'includes/header.php'; ?>
 
-<div class="container mt-4">
+<main class="container" style="padding: 48px 24px 80px; max-width: 800px;">
+    <h1><?= __('about.title') ?></h1>
+    <p style="font-size: 18px; margin-bottom: 40px;"><?= __('about.mission_text') ?></p>
 
-    <div style="max-width: 800px; margin: 60px auto; text-align: center;">
-        <h1 style="font-size: 32px; letter-spacing: -0.5px;">Empowering SME Growth</h1>
-        <p class="text-secondary mt-2" style="font-size: 18px;">
-            We bridge the gap between ambitious businesses and the capital they need to thrive.
-        </p>
-    </div>
+    <section style="margin-bottom: 40px;">
+        <h2>What We Do</h2>
+        <p>Kenes is a consultant boutique specializing in Damu entrepreneurship fund loan applications. We digitize the
+            entire application lifecycle — from document collection and AI-powered analysis to professional proposal
+            generation and bank submission.</p>
+        <p>Our AI engine analyzes your financial profile, risk factors, and business metrics in minutes. Our experienced
+            consultants then review and refine the proposal to maximize your approval chances.</p>
+    </section>
 
-    <div
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; margin-bottom: 80px;">
-        <div>
-            <h2
-                style="font-size: 14px; text-transform: uppercase; color: var(--color-gray-500); letter-spacing: 1px; margin-bottom: 16px;">
-                Our Mission</h2>
-            <p style="font-size: 20px; line-height: 1.6;">
-                To provide transparent, data-driven financial consultation that simplifies the lending process for
-                businesses of all sizes.
-            </p>
-        </div>
-        <div>
-            <h2
-                style="font-size: 14px; text-transform: uppercase; color: var(--color-gray-500); letter-spacing: 1px; margin-bottom: 16px;">
-                Who We Are</h2>
-            <p class="text-secondary">
-                Founded in Almaty, Kenes started as a small advisory firm. Today, we leverage advanced AI
-                verification models combined with expert human analysis to offer the most accurate risk assessments
-                in the market.
-            </p>
-            <p class="text-secondary mt-2">
-                Our team consists of former banking executives, data scientists, and risk management professionals
-                dedicated to your success.
-            </p>
-        </div>
-    </div>
+    <section style="margin-bottom: 40px;">
+        <h2>Our Team</h2>
+        <p>Kenes was founded by financial professionals with over 15 years of combined experience in Kazakh business
+            lending, risk analysis, and the Damu fund ecosystem. We understand the local requirements, documentation
+            standards, and bank expectations inside and out.</p>
+    </section>
 
-    <div style="margin-bottom: 80px;">
-        <h2
-            style="font-size: 24px; margin-bottom: 32px; border-bottom: 1px solid var(--color-gray-300); padding-bottom: 16px;">
-            Leadership Team</h2>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 40px;">
-
-            <div>
-                <div style="height: 2px; width: 40px; background: var(--color-green-primary); margin-bottom: 16px;">
-                </div>
-                <h3 style="font-size: 18px;">Almas Yerzhian</h3>
-                <p style="color: var(--color-gray-500); font-size: 14px; margin-bottom: 8px;">Chief Executive
-                    Officer</p>
-                <p class="text-secondary" style="font-size: 14px;">15+ years in Commercial Banking.</p>
+    <section style="margin-bottom: 40px;">
+        <h2>Our Values</h2>
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div class="card">
+                <h4 style="color: var(--yc-orange);">Transparency</h4>
+                <p style="font-size: 14px; margin: 0;">Every step of your application is visible. No hidden fees, no
+                    surprises.</p>
             </div>
-
-
-            <div>
-                <div style="height: 2px; width: 40px; background: var(--color-green-primary); margin-bottom: 16px;">
-                </div>
-                <h3 style="font-size: 18px;">Dana Ospanova</h3>
-                <p style="color: var(--color-gray-500); font-size: 14px; margin-bottom: 8px;">Head of Risk</p>
-                <p class="text-secondary" style="font-size: 14px;">Expert in Credit Analysis & AI.</p>
+            <div class="card">
+                <h4 style="color: var(--yc-orange);">Speed</h4>
+                <p style="font-size: 14px; margin: 0;">AI-driven analysis cuts processing time from weeks to hours.</p>
             </div>
-
-
-            <div>
-                <div style="height: 2px; width: 40px; background: var(--color-green-primary); margin-bottom: 16px;">
-                </div>
-                <h3 style="font-size: 18px;">Pavel Kim</h3>
-                <p style="color: var(--color-gray-500); font-size: 14px; margin-bottom: 8px;">Tech Lead</p>
-                <p class="text-secondary" style="font-size: 14px;">Architect of KenesCloud.</p>
+            <div class="card">
+                <h4 style="color: var(--yc-orange);">Expertise</h4>
+                <p style="font-size: 14px; margin: 0;">Real consultants with real experience in the Kazakh lending
+                    market.</p>
             </div>
         </div>
-    </div>
+    </section>
 
-</div>
+    <section>
+        <h2>Contact Us</h2>
+        <p>Email: <a href="mailto:info@kenes.kz">info@kenes.kz</a></p>
+        <p>Phone: +7 (727) 123-4567</p>
+        <p>Office: Almaty, Nazarbayev Avenue 120, Office 5B</p>
+    </section>
+</main>
 
 <?php include 'includes/footer.php'; ?>

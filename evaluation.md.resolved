@@ -1,0 +1,546 @@
+# Kenes Platform — Evaluation
+
+---
+
+## 1. Структура проекта (Project Structure Overview)
+
+```
+kenes/
+├── config.php                    ← API-ключи, пути загрузки
+├── schema.sql                    ← Полная схема БД (7 таблиц)
+├── public/
+│   ├── includes/
+│   │   ├── db.php                ← Подключение к БД (PDO/MySQL)
+│   │   ├── auth_guard.php        ← Авторизация, CSRF-защита
+│   │   ├── config.php            ← Автоопределение base_url
+│   │   ├── lang.php              ← Мультиязычность (EN/KZ/RU)
+│   │   ├── header.php / footer.php
+│   ├── js/
+│   │   ├── algorithms.js         ← Алгоритмы сортировки/поиска
+│   │   ├── form-validation.js    ← Клиентская валидация форм
+│   │   ├── navbar.js             ← Навигация, переключение языка
+│   ├── login.php                 ← Вход (customer + consultant)
+│   ├── register-customer.php     ← Регистрация клиента
+│   ├── register-consultant.php   ← Регистрация консультанта
+│   ├── customer-dashboard.php    ← Личный кабинет клиента
+│   ├── consultant-dashboard.php  ← Рабочий стол консультанта
+│   ├── application.php           ← 3-шаговый визард подачи заявки
+│   ├── submit_application.php    ← Обработка подачи заявки
+│   ├── ai_module.php             ← Симулированный AI-анализ
+│   ├── run_analysis.php          ← AI-эндпоинт (GET/POST)
+│   ├── update_status.php         ← AJAX обновление статуса
+│   ├── export_report.php         ← Генерация отчётов (HTML/DOCX)
+│   ├── profile.php               ← Редактирование профиля
+│   └── ...                       ← about, services, privacy, terms
+```
+
+---
+
+## 2. Слайсы кода и описание функций
+
+### 2.1 Подключение к базе данных — [includes/db.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/db.php)
+
+```php
+$host = 'localhost';
+$dbname = 'kenes';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log('DB connection failed: ' . $e->getMessage());
+    die(json_encode(['error' => 'Database connection failed.']));
+}
+```
+
+| Аспект | Описание |
+|--------|----------|
+| **Назначение** | Установка соединения с MySQL через PDO |
+| **Кодировка** | `utf8mb4` (поддержка Unicode/эмодзи) |
+| **Обработка ошибок** | PDO::ERRMODE_EXCEPTION — исключения при ошибках SQL |
+| **Режим выборки** | PDO::FETCH_ASSOC — возврат ассоциативных массивов |
+
+---
+
+### 2.2 Система авторизации — [includes/auth_guard.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php)
+
+```php
+function requireAuth($type = null) {
+    global $base_url;
+    if (empty($_SESSION['user_id'])) {
+        header('Location: ' . $base_url . '/login.php');
+        exit;
+    }
+    if ($type && ($_SESSION['user_type'] ?? '') !== $type) {
+        header('Location: ' . $base_url . '/login.php');
+        exit;
+    }
+}
+
+function csrfToken() {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function verifyCsrf() {
+    $token = $_POST['csrf_token'] ?? '';
+    if (!hash_equals($_SESSION['csrf_token'] ?? '', $token)) {
+        http_response_code(403);
+        die(json_encode(['error' => 'Invalid CSRF token']));
+    }
+}
+```
+
+| Функция | Назначение |
+|---------|-----------|
+| [requireAuth($type)](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php#12-28) | Проверяет наличие сессии; опционально ограничивает доступ по типу (`customer` / `consultant`). Незарегистрированных перенаправляет на [login.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/login.php). |
+| [csrfToken()](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php#29-39) | Генерирует 64-символьный hex-токен через `random_bytes(32)`. Сохраняется в `$_SESSION`. |
+| [verifyCsrf()](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php#40-51) | Сравнивает POST-токен с сессионным через `hash_equals()` (защита от timing attacks). При несовпадении — HTTP 403. |
+| [csrfField()](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php#52-59) | Выводит скрытое `<input>` поле с CSRF-токеном в HTML-формы. |
+
+---
+
+### 2.3 Логика входа — [login.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/login.php)
+
+```php
+$sql = "SELECT id, full_name, email, password_hash, 'customer' as user_type, ...
+        FROM customers WHERE email = ?
+        UNION ALL
+        SELECT id, full_name, email, password_hash, 'consultant' as user_type, ...
+        FROM consultants WHERE email = ?";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$email, $email]);
+$user = $stmt->fetch();
+
+if ($user && password_verify($password, $user['password_hash'])) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_type'] = $user['user_type'];
+    // ... сохранение данных в сессию
+    header('Location: ' . ($user['user_type'] === 'consultant'
+        ? 'consultant-dashboard.php' : 'customer-dashboard.php'));
+}
+```
+
+| Аспект | Описание |
+|--------|----------|
+| **Поиск пользователя** | `UNION ALL` запрос ищет email одновременно в `customers` и `consultants` |
+| **Хеширование пароля** | `password_verify()` — проверка bcrypt-хеша |
+| **Сессия** | Сохраняет `user_id`, `user_name`, `user_email`, `user_type` |
+| **Remember Me** | Продлевает cookie сессии на 30 дней |
+| **Защита** | CSRF-верификация через [verifyCsrf()](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php#40-51) |
+
+---
+
+### 2.4 Регистрация клиента — [register-customer.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/register-customer.php)
+
+```php
+// Валидация
+if (empty($full_name) || empty($email) || ... || empty($iin_bin)) {
+    $error_msg = "Please fill in all required fields.";
+} elseif ($password !== $confirm_password) {
+    $error_msg = "Passwords do not match.";
+} elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+    $error_msg = "Password must be at least 8 characters...";
+} elseif (strlen($iin_bin) !== 12 || !ctype_digit($iin_bin)) {
+    $error_msg = "IIN/BIN must be exactly 12 digits.";
+}
+
+// Проверка уникальности email и IIN/BIN
+$stmt = $pdo->prepare("SELECT id FROM customers WHERE email = ?");
+// ...
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
+$stmt = $pdo->prepare("INSERT INTO customers (...) VALUES (?,?,?,?,?,?,?,?)");
+```
+
+| Проверка | Правило |
+|----------|---------|
+| Обязательные поля | `full_name`, `email`, `phone`, `password`, `iin_bin` |
+| Пароль | ≥ 8 символов, 1 заглавная, 1 строчная, 1 цифра |
+| ИИН/БИН | Ровно 12 цифр |
+| Уникальность | Проверка `email` и `iin_bin` в БД перед INSERT |
+| Хеширование | `password_hash(PASSWORD_DEFAULT)` — bcrypt |
+
+---
+
+### 2.5 AI-модуль анализа рисков — [ai_module.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/ai_module.php)
+
+```php
+function analyzeApplication($application_id, $service_type, $amount, $purpose) {
+    sleep(1);  // Имитация задержки API
+    $risk_score = rand(300, 850);  // Случайный скоринг
+
+    if ($risk_score < 500) {
+        $status = 'rejected';
+        $approved_amount = 0;
+    } elseif ($risk_score < 650) {
+        $status = 'approved';
+        $approved_amount = $amount * 0.8;  // 80%
+        $interest_rate = 18.5;
+    } else {
+        $status = 'approved';
+        $interest_rate = 12.0;  // Полная сумма
+    }
+
+    return [
+        'analysis_json' => json_encode($analysis_result),
+        'status' => $status,
+        'reason' => $reason
+    ];
+}
+```
+
+| Диапазон скоринга | Решение | Сумма | Ставка |
+|---|---|---|---|
+| 300–499 | **Rejected** | 0 KZT | — |
+| 500–649 | **Partial Approval** | 80% от запрошенной | 18.5% |
+| 650–850 | **Full Approval** | 100% | 12.0% |
+
+---
+
+### 2.6 Обработка заявки — [submit_application.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/submit_application.php)
+
+```php
+requireAuth('customer');
+verifyCsrf();
+
+$pdo->beginTransaction();
+
+// 1. INSERT заявки
+$stmt = $pdo->prepare("INSERT INTO applications (...) VALUES (...)");
+$application_id = $pdo->lastInsertId();
+
+// 2. Создание директории uploads/{customer_id}/{app_id}/
+mkdir($upload_base, 0755, true);
+
+// 3. Загрузка документов (typed + drag-drop)
+$allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'application/...docx'];
+$max_size = 10 * 1024 * 1024; // 10MB
+// ... MIME-проверка, sanitize имени файла, move_uploaded_file()
+
+// 4. Логирование в activity_log
+$pdo->commit();
+```
+
+| Шаг | Описание |
+|-----|----------|
+| Авторизация | Только `customer` |
+| Валидация | `service_id > 0`, `amount ≥ 100,000 KZT` |
+| Транзакция | `beginTransaction()` → `commit()` / `rollBack()` |
+| Загрузка файлов | MIME-whitelist, лимит 10 MB, sanitize имени |
+| Аудит | Запись в `activity_log` |
+
+---
+
+### 2.7 Клиентская валидация форм — [js/form-validation.js](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/form-validation.js)
+
+```javascript
+function validateField(input) {
+    var type = input.dataset.validate || '';
+    var value = input.value.trim();
+
+    if (input.required && !value) {
+        return setInvalid('This field is required.');
+    }
+    if (type === 'email')    → /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (type === 'phone')    → длина 10–15 после удаления пробелов
+    if (type === 'password') → ≥8 chars, [A-Z], [a-z], \d
+    if (type === 'confirm-password') → совпадение с #password
+    if (type === 'iin')      → /^\d{12}$/
+}
+```
+
+| Тип валидации | Правило |
+|---|---|
+| `required` | Непустое значение |
+| `email` | Regex: `user@domain.tld` |
+| `phone` | 10–15 цифр (без пробелов/скобок) |
+| `password` | ≥ 8 символов, uppercase, lowercase, digit |
+| `confirm-password` | Совпадение с полем `#password` |
+| `iin` | Ровно 12 цифр |
+
+---
+
+### 2.8 Библиотека алгоритмов — [js/algorithms.js](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js)
+
+```javascript
+// Поиск
+function linearSearch(arr, target)  → O(n)
+function binarySearch(arr, target)  → O(log n), требует sorted array
+
+// Сортировка
+function bubbleSort(arr)     → O(n²), stable, in-place
+function insertionSort(arr)  → O(n²), stable, in-place
+function quickSort(arr)      → O(n log n) avg, unstable, new array
+function mergeSort(arr)      → O(n log n), stable, new array
+function merge(left, right)  → Helper для mergeSort
+```
+
+| Алгоритм | Время (avg) | Время (worst) | Пространство | Стабильность |
+|---|---|---|---|---|
+| Linear Search | O(n) | O(n) | O(1) | — |
+| Binary Search | O(log n) | O(log n) | O(1) | — |
+| Bubble Sort | O(n²) | O(n²) | O(1) | ✅ Stable |
+| Insertion Sort | O(n²) | O(n²) | O(1) | ✅ Stable |
+| Quick Sort | O(n log n) | O(n²) | O(n) | ❌ Unstable |
+| Merge Sort | O(n log n) | O(n log n) | O(n) | ✅ Stable |
+
+---
+
+### 2.9 Навигация — [js/navbar.js](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/navbar.js)
+
+```javascript
+// 1. Мобильное гамбургер-меню
+toggle.addEventListener('click', () => menu.classList.toggle('open'));
+
+// 2. Подсветка текущей страницы
+var currentPage = window.location.pathname.split('/').pop();
+navLinks.forEach(link => { if (href.includes(currentPage)) link.classList.add('active'); });
+
+// 3. Переключатель языка
+document.querySelectorAll('.lang-switcher a').forEach(link => {
+    url.searchParams.set('lang', lang);
+    window.location.href = url.toString();
+});
+```
+
+---
+
+## 3. Таблица тестов
+
+### 3.1 Модуль авторизации ([login.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/login.php))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Успешный вход (customer) | email: `test@test.com`, password: `Abcd1234` | Redirect → [customer-dashboard.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/customer-dashboard.php), сессия создана | ✅ Работает корректно |
+| 2 | Успешный вход (consultant) | email: `cons@kenes.kz`, password: `Abcd1234` | Redirect → [consultant-dashboard.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/consultant-dashboard.php) | ✅ Работает корректно |
+| 3 | Неверный пароль | email: `test@test.com`, password: `wrong` | Сообщение «Invalid email or password» | ✅ Работает корректно |
+| 4 | Пустые поля | email: `""`, password: `""` | Сообщение «Please fill in all fields» | ✅ Работает корректно |
+| 5 | Несуществующий email | email: `noone@x.com` | Сообщение «Invalid email or password» | ✅ Работает корректно |
+| 6 | CSRF-атака | POST без `csrf_token` | HTTP 403 + JSON ошибка | ✅ Блокируется |
+
+### 3.2 Регистрация клиента ([register-customer.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/register-customer.php))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Успешная регистрация | Все поля заполнены корректно | Redirect → [customer-dashboard.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/customer-dashboard.php), запись в БД | ✅ Работает |
+| 2 | Несовпадение паролей | password ≠ confirm_password | «Passwords do not match» | ✅ Работает |
+| 3 | Слабый пароль | `1234567` | «Password must be at least 8 characters…» | ✅ Работает |
+| 4 | Неверный ИИН | `12345` (5 цифр) | «IIN/BIN must be exactly 12 digits» | ✅ Работает |
+| 5 | Дублирующийся email | email уже в БД | «Email already registered» | ✅ Работает |
+| 6 | Дублирующийся ИИН | `iin_bin` уже в БД | «IIN/BIN already registered» | ✅ Работает |
+
+### 3.3 Регистрация консультанта ([register-consultant.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/register-consultant.php))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Верный invite code | `KENES2025` | Регистрация успешна | ✅ Работает |
+| 2 | Неверный invite code | `WRONG` | «Invalid invite code» | ✅ Работает |
+| 3 | Дубль Employee ID | Существующий `employee_id` | «Employee ID already registered» | ✅ Работает |
+
+### 3.4 AI-анализ ([run_analysis.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/run_analysis.php))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Запуск анализа (POST) | `app_id=1` (consultant авторизован) | JSON с `scoring`, `risk`, `recommended` | ✅ Работает |
+| 2 | Без app_id | POST без `app_id` | JSON `{"error":"Missing app_id"}` | ✅ Работает |
+| 3 | Несуществующая заявка | `app_id=99999` | JSON `{"error":"Application not found"}` | ✅ Работает |
+| 4 | Неавторизованный доступ | Без сессии | Redirect → [login.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/login.php) | ✅ Работает |
+| 5 | Получение (GET) | `?app_id=1` | JSON с proposal или `null` | ✅ Работает |
+
+### 3.5 Подача заявки ([submit_application.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/submit_application.php))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Успешная подача | `service_id=1`, `amount=5000000` | Запись в `applications`, redirect | ✅ Работает |
+| 2 | Сумма < 100,000 | `amount=50000` | Flash error, redirect назад | ✅ Работает |
+| 3 | Без service_id | `service_id=0` | Flash error | ✅ Работает |
+| 4 | GET запрос | GET [/submit_application.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/submit_application.php) | Redirect → [application.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/application.php) | ✅ Работает |
+| 5 | Файл > 10 MB | PDF 15 MB | Файл пропускается (не сохраняется) | ✅ Пропускается тихо |
+| 6 | Запрещённый MIME | `.exe` файл | Файл пропускается | ✅ Работает |
+
+### 3.6 Клиентская валидация ([form-validation.js](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/form-validation.js))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Пустое обязательное поле | blur на пустом `required` | Класс `is-invalid`, текст ошибки | ✅ Работает |
+| 2 | Невалидный email | `notanemail` | «Please enter a valid email» | ✅ Работает |
+| 3 | Короткий телефон | `123` | «Please enter a valid phone number» | ✅ Работает |
+| 4 | Пароль без цифры | `Abcdefgh` | «Password needs at least 1 number» | ✅ Работает |
+| 5 | Несовпадение паролей | password ≠ confirm | «Passwords do not match» | ✅ Работает |
+| 6 | ИИН 10 цифр | `1234567890` | «IIN/BIN must be exactly 12 digits» | ✅ Работает |
+
+### 3.7 Алгоритмы ([algorithms.js](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js))
+
+| # | Тест | Вход | Ожидаемый результат | Фактический результат |
+|---|------|------|---------------------|----------------------|
+| 1 | Linear Search (найден) | [linearSearch([5,3,8,1], 8)](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#34-73) | `2` | ✅ Возвращает `2` |
+| 2 | Linear Search (не найден) | [linearSearch([5,3,8,1], 9)](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#34-73) | `-1` | ✅ Возвращает `-1` |
+| 3 | Binary Search (найден) | [binarySearch([1,3,5,8], 5)](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#74-133) | `2` | ✅ Возвращает `2` |
+| 4 | Bubble Sort | [bubbleSort([5,3,8,1,4])](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#139-196) | `[1,3,4,5,8]` | ✅ Корректно |
+| 5 | Insertion Sort | [insertionSort([5,3,8,1])](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#197-258) | `[1,3,5,8]` | ✅ Корректно |
+| 6 | Quick Sort | [quickSort([5,3,8,1,4,2])](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#259-312) | `[1,2,3,4,5,8]` | ✅ Корректно |
+| 7 | Merge Sort | [mergeSort([5,3,8,1])](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#313-349) | `[1,3,5,8]` | ✅ Корректно |
+| 8 | Пустой массив | [bubbleSort([])](file:///c:/Users/User/OneDrive/Desktop/kenes/public/js/algorithms.js#139-196) | `[]` | ✅ Корректно |
+
+---
+
+## 4. Список реализованных технических задач
+
+| # | Задача | Статус |
+|---|--------|--------|
+| 1 | Схема БД: 7 таблиц (`customers`, `consultants`, `services`, `applications`, `application_documents`, `proposals`, `activity_log`) с внешними ключами и каскадным удалением | ✅ |
+| 2 | Аутентификация: вход по email (UNION по двум таблицам), bcrypt-хеширование, сессии | ✅ |
+| 3 | CSRF-защита: генерация токена (`random_bytes`), проверка через `hash_equals`, скрытые поля в формах | ✅ |
+| 4 | Ролевая модель: разделение `customer` / `consultant`, [requireAuth($type)](file:///c:/Users/User/OneDrive/Desktop/kenes/public/includes/auth_guard.php#12-28) | ✅ |
+| 5 | Регистрация клиента: валидация (пароль, ИИН, уникальность email/ИИН), сохранение бизнес-данных | ✅ |
+| 6 | Регистрация консультанта: invite-code (`KENES2025`), проверка уникальности `employee_id` | ✅ |
+| 7 | 3-шаговый визард подачи заявки: выбор услуги → загрузка документов → обзор и отправка | ✅ |
+| 8 | Multi-file upload: типизированные слоты + drag-and-drop, MIME-валидация, лимит 10 MB | ✅ |
+| 9 | AI-модуль скоринга: Rule-based анализ с рандомизированным баллом (300–850), три уровня решений | ✅ |
+| 10 | AI-эндпоинт ([run_analysis.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/run_analysis.php)): поддержка KenesCloud API + local fallback, upsert proposal | ✅ |
+| 11 | Клиентский дашборд: таблица заявок, статистика, чеклист документов | ✅ |
+| 12 | Консультантский дашборд: 3-колоночный layout (очередь кейсов → детали → AI-панель) | ✅ |
+| 13 | AJAX-управление статусами: 10 статусов заявки, автосохранение заметок (debounce 500ms) | ✅ |
+| 14 | Генерация отчётов: HTML-просмотр + DOCX-экспорт (через PhpWord при наличии Composer) | ✅ |
+| 15 | Профиль пользователя: редактирование данных + смена пароля | ✅ |
+| 16 | Мультиязычность (i18n): EN / KZ / RU, переключатель в navbar | ✅ |
+| 17 | Клиентская валидация форм: real-time на blur, submit-блокировка, 6 типов проверок | ✅ |
+| 18 | Алгоритмическая библиотека: 4 сортировки + 2 поиска, полная документация Big-O | ✅ |
+| 19 | Activity logging: запись действий пользователей в `activity_log` | ✅ |
+| 20 | Адаптивная навигация: мобильное гамбургер-меню, подсветка активной страницы | ✅ |
+| 21 | Claude API интеграция: генерация текстовых/DOCX/PPTX предложений через AI | ✅ |
+| 22 | Seed-данные: 6 предустановленных кредитных продуктов (SME, Leasing, Microcredit, Investment, Green, Analysis) | ✅ |
+
+---
+
+## 5. Текущие ограничения кода
+
+| # | Ограничение | Влияние |
+|---|-------------|---------|
+| 1 | **API-ключ Claude зашит в [config.php](file:///c:/Users/User/OneDrive/Desktop/kenes/config.php)** и может попасть в историю Git | 🔴 Критическая уязвимость безопасности |
+| 2 | **AI-скоринг основан на `rand()`** — результат непредсказуем и не отражает реальные данные клиента | ⚠️ Неприменим для реального скоринга |
+| 3 | **Нет смены/восстановления пароля по email** — отсутствует функционал «Забыли пароль?» | ⚠️ Плохой UX |
+| 4 | **Отсутствуют unit/integration тесты** для PHP backend | ⚠️ Нет автоматизированного тестирования |
+| 5 | **Консультант видит ВСЕ заявки**, без привязки к конкретному консультанту | ⚠️ Нет разграничения ответственности |
+| 6 | **Нет rate limiting** на login/register — уязвимость к brute-force атакам | 🔴 Безопасность |
+| 7 | **Загруженные файлы не проверяются антивирусом**, только MIME-whitelist | ⚠️ Безопасность файлов |
+| 8 | **БД credentials (root без пароля)** зашиты в коде, не через `.env` | ⚠️ Плохая практика развёртывания |
+| 9 | **[update_status.php](file:///c:/Users/User/OneDrive/Desktop/kenes/public/update_status.php) не проверяет CSRF token** при AJAX-запросах | 🔴 Уязвимость CSRF |
+| 10 | **Нет пагинации** на клиентском дашборде — при большом числе заявок может тормозить | ⚠️ Производительность |
+
+---
+
+## 6. Предложения по масштабированию
+
+### 6.1 Интеграция реальной AI/ML-модели скоринга
+
+Заменить `rand(300, 850)` на реальную модель машинного обучения:
+- Использовать **Python FastAPI микросервис** (backend уже подготовлен — папка `backend/`) для запуска ML-модели (Scikit-learn / XGBoost)
+- Модель обучается на исторических данных: финансовая история, доход, отрасль, размер бизнеса
+- PHP вызывает микросервис через API, получает score + объяснение
+- Это превратит систему из демонстрационной в рабочий продукт
+
+### 6.2 Переход на `.env` + ORM + Docker
+
+Текущая архитектура привязана к XAMPP и жёстко прописанным credentials. Для масштабирования:
+- **`.env` файл** для всех секретов (DB, API keys) через `phpdotenv`
+- **Docker Compose**: PHP-FPM + MySQL + Nginx — единая развёртка одной командой
+- **Миграции БД** через Phinx или встроенные SQL-миграции (уже есть [migrate.sql](file:///c:/Users/User/OneDrive/Desktop/kenes/migrate.sql))
+- Это упростит развёртывание на серверах и облачных платформах
+
+### 6.3 Расширение ролевой модели (RBAC) и уведомления
+
+Добавить систему ролей и уведомлений:
+- **Администратор**: управление пользователями, услугами, глобальная аналитика
+- **Менеджер**: назначение консультантов на заявки, контроль качества
+- **Real-time уведомления**: email/SMS при смене статуса заявки (через SendGrid / Twilio)
+- **WebSocket**: живое обновление дашборда консультанта без перезагрузки страницы
+- Это позволит обслуживать команды из 10+ консультантов с сотнями заявок
+
+---
+
+## 7. Схема базы данных (ER-диаграмма)
+
+```mermaid
+erDiagram
+    customers ||--o{ applications : "подаёт"
+    consultants ||--o{ applications : "обрабатывает"
+    services ||--o{ applications : "указана в"
+    applications ||--o{ application_documents : "содержит"
+    applications ||--o{ proposals : "анализируется"
+    consultants ||--o{ proposals : "создаёт"
+
+    customers {
+        int id PK
+        varchar full_name
+        varchar email UK
+        varchar phone
+        varchar password_hash
+        varchar iin_bin UK
+        varchar city_region
+        varchar business_name
+        varchar business_type
+    }
+
+    consultants {
+        int id PK
+        varchar full_name
+        varchar email UK
+        varchar employee_id UK
+        varchar department
+        varchar password_hash
+    }
+
+    services {
+        int id PK
+        varchar name
+        text description
+        decimal interest_rate
+        decimal max_amount
+        varchar loan_type
+        boolean active
+    }
+
+    applications {
+        int id PK
+        int customer_id FK
+        int service_id FK
+        int consultant_id FK
+        decimal amount
+        text purpose
+        enum status
+    }
+
+    application_documents {
+        int id PK
+        int application_id FK
+        varchar file_path
+        varchar file_name
+        varchar document_type
+    }
+
+    proposals {
+        int id PK
+        int application_id FK
+        int consultant_id FK
+        decimal scoring_points
+        varchar risk_level
+        decimal recommended_amount
+        text ai_summary
+        enum status
+    }
+
+    activity_log {
+        int id PK
+        int user_id
+        enum user_type
+        varchar action
+        text details
+    }
+```

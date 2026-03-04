@@ -1,6 +1,11 @@
 <?php
+/**
+ * Database Connection — Kenes Platform
+ * XAMPP MySQL via PDO
+ */
+
 $host = 'localhost';
-$dbname = 'damu_loan_consultant';
+$dbname = 'kenes';
 $username = 'root';
 $password = '';
 
@@ -9,6 +14,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    error_log('DB connection failed: ' . $e->getMessage());
+    die(json_encode(['error' => 'Database connection failed. Please try again later.']));
 }
 ?>

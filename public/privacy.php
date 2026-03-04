@@ -1,41 +1,45 @@
 <?php include 'includes/header.php'; ?>
 
-<div class="container mt-4">
-    <header style="margin: 60px 0 40px; border-bottom: 1px solid var(--color-gray-300); padding-bottom: 24px;">
-        <h1 style="font-size: 32px;">Privacy Policy</h1>
-        <p class="text-secondary">Last updated: February 18, 2026</p>
-    </header>
+<main class="container" style="padding: 48px 24px 80px; max-width: 800px;">
+    <h1><?= __('footer.privacy') ?></h1>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 32px;">Last updated: March 2026</p>
 
-    <section style="margin-bottom: 80px; max-width: 800px;">
-        <h2 style="font-size: 20px; margin-bottom: 16px;">1. Introduction</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            Kenes ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how
-            we collect, use, and share your personal information when you use our services.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">2. Information We Collect</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            We may collect personal information such as your name, email address, phone number, and financial
-            information when you apply for our services or communicate with us.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">3. How We Use Your Information</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            We use your information to provide and improve our services, process applications, communicate with you,
-            and comply with legal obligations.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">4. Data Security</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            We implement appropriate security measures to protect your personal information from unauthorized
-            access, alteration, disclosure, or destruction.
-        </p>
-
-        <h2 style="font-size: 20px; margin-bottom: 16px;">5. Contact Us</h2>
-        <p style="margin-bottom: 24px; line-height: 1.6;">
-            If you have any questions about this Privacy Policy, please contact us at privacy@kenes.com.
+    <section style="margin-bottom: 32px;">
+        <h3>1. Information We Collect</h3>
+        <p>We collect personal information you provide during registration: full name, email, phone number, IIN/BIN,
+            business details, and city/region. We also collect documents you upload during the loan application process.
         </p>
     </section>
-</div>
+
+    <section style="margin-bottom: 32px;">
+        <h3>2. How We Use Your Data</h3>
+        <p>Your data is used to: process your loan application, communicate with you about your case, generate
+            AI-powered financial analysis, create loan proposals for bank submission, and improve our services.</p>
+    </section>
+
+    <section style="margin-bottom: 32px;">
+        <h3>3. Data Sharing</h3>
+        <p>We share your information only with: banks you apply to (with your consent), our AI analysis partners
+            (KenesCloud), and regulatory bodies when legally required. We never sell your personal data to third
+            parties.</p>
+    </section>
+
+    <section style="margin-bottom: 32px;">
+        <h3>4. Data Security</h3>
+        <p>We use encryption, secure servers, and access controls to protect your data. Passwords are hashed using
+            industry-standard algorithms. All document uploads are transmitted over encrypted connections.</p>
+    </section>
+
+    <section style="margin-bottom: 32px;">
+        <h3>5. Your Rights</h3>
+        <p>You have the right to access, correct, or delete your personal data at any time. Contact us at <a
+                href="mailto:privacy@kenes.kz">privacy@kenes.kz</a> to exercise these rights.</p>
+    </section>
+
+    <section>
+        <h3>6. Contact</h3>
+        <p>For privacy-related inquiries: <a href="mailto:privacy@kenes.kz">privacy@kenes.kz</a></p>
+    </section>
+</main>
 
 <?php include 'includes/footer.php'; ?>

@@ -1,16 +1,19 @@
 <?php
+/**
+ * Submit Case endpoint (consultant creates case on behalf of customer)
+ * Fixed: corrected include path, auth redirect, file upload security.
+ */
 session_start();
-require_once 'db.php';
-
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'consultant') {
-    header('Location: login.html?error=unauthorized');
-    exit;
-}
+require_once 'includes/db.php';
+require_once 'includes/auth_guard.php';
+requireAuth('consultant');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: create_case.php');
     exit;
 }
+
+verifyCsrf();
 
 $customer_id = intval($_POST['customer_id'] ?? 0);
 $service_type = trim($_POST['service_type'] ?? '');
@@ -26,34 +29,43 @@ if ($customer_id <= 0 || empty($service_type) || $amount <= 0 || empty($purpose)
 try {
     $pdo->beginTransaction();
 
-    // Insert application - ensure status is pending or processing? User said "Customer submits... Consultant creates...". 
-    // If consultant creates it, maybe it starts as 'processing'? Let's keep it 'pending' for consistency or 'processing'.
-    // Let's stick to 'pending' so it flows through the same logic, or 'processing' since a human agent made it.
-    // User flow: "create new case -> AI analyzes". AI needs input.
     $stmt = $pdo->prepare("INSERT INTO applications (customer_id, service_type, amount, purpose, status, consultant_id) VALUES (?, ?, ?, ?, 'pending', ?)");
     $stmt->execute([$customer_id, $service_type, $amount, $purpose, $consultant_id]);
     $application_id = $pdo->lastInsertId();
 
-    // Handle file uploads
+    // Handle file uploads with security checks
     if (isset($_FILES['documents'])) {
-        $upload_dir = 'uploads/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
+        $upload_base = __DIR__ . '/../uploads/' . $customer_id . '/' . $application_id . '/';
+        if (!is_dir($upload_base)) {
+            mkdir($upload_base, 0755, true);
         }
 
+        $allowed_types = ['application/pdf', 'image/jpeg', 'image/png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        $max_size = 10 * 1024 * 1024; // 10MB
+
         $file_count = count($_FILES['documents']['name']);
-        $doc_stmt = $pdo->prepare("INSERT INTO application_documents (application_id, file_path, file_name, file_type) VALUES (?, ?, ?, ?)");
+        $doc_stmt = $pdo->prepare("INSERT INTO application_documents (application_id, file_path, file_name, document_type, file_type, file_size) VALUES (?, ?, ?, ?, ?, ?)");
 
         for ($i = 0; $i < $file_count; $i++) {
-            if ($_FILES['documents']['error'][$i] === UPLOAD_ERR_OK) {
-                $tmp_name = $_FILES['documents']['tmp_name'][$i];
-                $name = basename($_FILES['documents']['name'][$i]);
-                $type = $_FILES['documents']['type'][$i];
-                $target_file = $upload_dir . uniqid() . '_' . $name;
+            if ($_FILES['documents']['error'][$i] !== UPLOAD_ERR_OK)
+                continue;
 
-                if (move_uploaded_file($tmp_name, $target_file)) {
-                    $doc_stmt->execute([$application_id, $target_file, $name, $type]);
-                }
+            $tmpName = $_FILES['documents']['tmp_name'][$i];
+            $fileName = $_FILES['documents']['name'][$i];
+            $fileSize = $_FILES['documents']['size'][$i];
+            $mimeType = mime_content_type($tmpName);
+
+            if (!in_array($mimeType, $allowed_types))
+                continue;
+            if ($fileSize > $max_size)
+                continue;
+
+            $safeName = time() . '_' . $i . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '', $fileName);
+            $destPath = $upload_base . $safeName;
+
+            if (move_uploaded_file($tmpName, $destPath)) {
+                $relativePath = 'uploads/' . $customer_id . '/' . $application_id . '/' . $safeName;
+                $doc_stmt->execute([$application_id, $relativePath, $fileName, 'other', $mimeType, $fileSize]);
             }
         }
     }
@@ -66,7 +78,8 @@ try {
     if ($pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    header('Location: create_case.php?error=database_error&message=' . urlencode($e->getMessage()));
+    error_log('submit_case error: ' . $e->getMessage());
+    header('Location: create_case.php?error=database_error');
     exit;
 }
 ?>
